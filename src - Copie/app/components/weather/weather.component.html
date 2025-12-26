@@ -1,0 +1,104 @@
+<div class="weather-page">
+  <div class="weather-container">
+    <!-- Header -->
+    <header class="weather-header">
+      <button class="back-btn" (click)="goBack()">
+        <span class="back-icon">←</span>
+      </button>
+      <div class="header-content">
+        <h1 class="title">Prévisions Météo IA</h1>
+        <p class="subtitle">Recommandations intelligentes pour votre jardin</p>
+      </div>
+    </header>
+
+    <!-- Search Bar -->
+    <div class="search-section">
+      <div class="search-box">
+        <input
+          type="text"
+          [(ngModel)]="searchCity"
+          (keyup.enter)="searchWeather()"
+          placeholder="Entrez votre ville ou région..."
+          class="search-input"
+        />
+        <button class="search-btn" (click)="searchWeather()">
+          <span class="search-icon">☁️</span>
+          Rechercher
+        </button>
+      </div>
+    </div>
+
+    <!-- Error Message -->
+    <div *ngIf="errorMessage" class="error-message">
+      ❌ {{ errorMessage }}
+    </div>
+
+    <!-- Loading -->
+    <div *ngIf="isLoading" class="loading">
+      <div class="spinner"></div>
+      <p>Chargement des données météo...</p>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="!currentWeather && !isLoading && !errorMessage" class="empty-state">
+      <div class="cloud-icon">☁️</div>
+      <p>Entrez une localisation pour voir les prévisions météo</p>
+    </div>
+
+    <!-- Current Weather Card -->
+    <div *ngIf="currentWeather && !isLoading" class="current-weather-card">
+      <div class="weather-main">
+        <div class="location-info">
+          <h2 class="city-name">{{ currentWeather.city }}, {{ currentWeather.country }}</h2>
+          <p class="weather-status">Météo actuelle</p>
+        </div>
+        <div class="temp-display">
+          <span class="temp-icon">{{ currentWeather.icon }}</span>
+          <span class="temp-value">{{ currentWeather.temperature }}°C</span>
+        </div>
+      </div>
+
+      <div class="weather-details">
+        <div class="detail-item">
+          <p class="detail-label">Condition</p>
+          <p class="detail-value">{{ currentWeather.condition }}</p>
+        </div>
+        <div class="detail-item">
+          <p class="detail-label">Humidité</p>
+          <p class="detail-value">{{ currentWeather.humidity }}%</p>
+        </div>
+        <div class="detail-item">
+          <p class="detail-label">Chance de pluie</p>
+          <p class="detail-value">{{ currentWeather.rainChance }}%</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Forecast -->
+    <div *ngIf="forecast.length > 0 && !isLoading" class="forecast-section">
+      <h3 class="forecast-title">Prévisions sur 5 jours</h3>
+      <div class="forecast-grid">
+        <div *ngFor="let day of forecast" class="forecast-card">
+          <p class="forecast-day">{{ day.dayName }}</p>
+          <p class="forecast-date">{{ day.date }}</p>
+          <div class="forecast-icon">{{ day.icon }}</div>
+          <p class="forecast-condition">{{ day.condition }}</p>
+          <div class="forecast-temp">
+            <span class="temp-max">{{ day.tempMax }}°</span> / 
+            <span class="temp-min">{{ day.tempMin }}°</span>
+          </div>
+          <p class="forecast-rain">Pluie {{ day.rainChance }}%</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recommendations -->
+    <div *ngIf="currentWeather && !isLoading" class="recommendations-section">
+      <h3 class="recommendations-title">🌱 Recommandations pour votre jardin</h3>
+      <div class="recommendation-card" *ngFor="let rec of recommendations">
+        <div class="rec-number">{{ rec.id }}</div>
+        <p class="rec-text">{{ rec.text }}</p>
+      </div>
+    </div>
+  </div>
+</div>

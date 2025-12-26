@@ -1,0 +1,13 @@
+[build]
+  command = "npm run build"
+  publish = "dist/garden/browser"
+  functions = "netlify/functions"
+
+[[redirects]]
+  from = "/*"
+  to = "/.netlify/functions/server"
+  status = 200
+
+[functions]
+  node_bundler = "esbuild"
+  external_node_modules = ["express", "@angular/ssr"]

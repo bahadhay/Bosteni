@@ -1,0 +1,124 @@
+<div class="login-page">
+  <main class="login-card">
+    <header class="card-header">
+      <div class="brand-container">
+        <div class="logo">🌱</div>
+        <h2 class="brand-name">BOSTENI</h2>
+      </div>
+      
+      <h1 id="login-title">{{ showForgotPassword ? 'Forgot Password' : 'Sign in' }}</h1>
+      <p class="subtitle">
+        {{ showForgotPassword ? 'Enter your email to reset your password' : 'Enter your credentials to access your garden' }}
+      </p>
+    </header>
+
+    <!-- FORMULAIRE DE CONNEXION -->
+    <form
+      *ngIf="!showForgotPassword"
+      class="login-form"
+      #loginForm="ngForm" 
+      (ngSubmit)="onSubmit(loginForm)"
+      novalidate
+    >
+      <!-- EMAIL -->
+      <label for="email" class="field-label">Email</label>
+      <input
+        id="email"
+        name="email"
+        type="email"
+        [(ngModel)]="email"
+        required
+        email
+        placeholder="votre@email.com"
+        class="input-field"
+      />
+
+      <!-- PASSWORD -->
+      <label for="password" class="field-label">Password</label>
+      <input
+        id="password"
+        name="password"
+        [type]="showPassword ? 'text' : 'password'"
+        [(ngModel)]="password"
+        required
+        minlength="6"
+        placeholder="••••••••"
+        class="input-field"
+      />
+
+      <!-- SHOW PASSWORD -->
+      <div class="password-row">
+        <label class="checkbox">
+          <input type="checkbox" (change)="showPassword = !showPassword" />
+          <span>Show password</span>
+        </label>
+        <a class="forgot-link" (click)="toggleForgotPassword()">Forgot password?</a>
+      </div>
+
+      <!-- MESSAGE D'ERREUR -->
+      <div *ngIf="errorMessage" class="error-message">
+        ❌ {{ errorMessage }}
+      </div>
+
+      <!-- SUBMIT -->
+      <button
+        type="submit"
+        class="btn-primary"
+        [disabled]="loginForm.invalid || isLoading"
+      >
+        {{ isLoading ? 'Loading...' : 'Sign in' }}
+      </button>
+    </form>
+
+    <!-- FORMULAIRE MOT DE PASSE OUBLIÉ -->
+    <form
+      *ngIf="showForgotPassword"
+      class="login-form"
+      #forgotForm="ngForm"
+      (ngSubmit)="onForgotPassword(forgotForm)"
+      novalidate
+    >
+      <!-- EMAIL -->
+      <label for="reset-email" class="field-label">Email</label>
+      <input
+        id="reset-email"
+        name="resetEmail"
+        type="email"
+        [(ngModel)]="resetEmail"
+        required
+        email
+        placeholder="votre@email.com"
+        class="input-field"
+      />
+      <p class="input-hint">Enter your registered email address</p>
+
+      <!-- MESSAGE DE SUCCÈS -->
+      <div *ngIf="successMessage" class="success-message">
+        ✅ {{ successMessage }}
+      </div>
+
+      <!-- MESSAGE D'ERREUR -->
+      <div *ngIf="errorMessage" class="error-message">
+        ❌ {{ errorMessage }}
+      </div>
+
+      <!-- SUBMIT -->
+      <button
+        type="submit"
+        class="btn-primary"
+        [disabled]="forgotForm.invalid || isLoading"
+      >
+        {{ isLoading ? 'Sending...' : 'Send Reset Email' }}
+      </button>
+
+      <!-- RETOUR -->
+      <button
+        type="button"
+        class="btn-secondary"
+        (click)="toggleForgotPassword()"
+      >
+        ← Back to Sign in
+      </button>
+    </form>
+  </main>
+</div>

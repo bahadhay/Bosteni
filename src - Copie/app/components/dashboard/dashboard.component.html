@@ -1,0 +1,197 @@
+<div class="dashboard">
+  <!-- Notification d'alerte eau -->
+  <div *ngIf="showNotification" class="water-alert-notification">
+    <div class="alert-content">
+      <div class="alert-icon">⚠️</div>
+      <div class="alert-text">
+        <h3>Niveau d'eau critique !</h3>
+        <p>Le niveau d'eau est à {{ waterLevel.percentage }}%. Veuillez remplir la citerne.</p>
+      </div>
+      <div class="alert-actions">
+        <button class="btn-refill" (click)="refillWater()">
+          Remplir maintenant
+        </button>
+        <button class="btn-dismiss" (click)="dismissAlert()">
+          Plus tard
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <header class="dashboard-header">
+    <div class="header-content">
+      <h1 class="title">Eco Garden</h1>
+      <p class="subtitle">Système de gestion intelligent d'arrosage</p>
+    </div>
+    
+    <div class="header-actions">
+      <button class="profile-btn" (click)="goToProfile()">
+        <span class="profile-icon">👤</span>
+        <span class="profile-text">Modifier profil</span>
+      </button>
+      
+      <button class="logout-btn" (click)="logout()">
+        <span class="logout-icon">🚪</span>
+        <span class="logout-text">Déconnexion</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Sensor Cards -->
+  <div class="sensor-grid">
+    <!-- Temperature Card -->
+    <div class="sensor-card temperature-card">
+      <div class="card-icon">🌡️</div>
+      <div class="card-content">
+        <p class="card-label">Température</p>
+        <h2 class="card-value">{{ sensorData.temperature.toFixed(1) }} <span class="unit">°C</span></h2>
+      </div>
+    </div>
+
+    <!-- Air Humidity Card -->
+    <div class="sensor-card humidity-card">
+      <div class="card-icon">💨</div>
+      <div class="card-content">
+        <p class="card-label">Humidité de l'air</p>
+        <h2 class="card-value">{{ sensorData.airHumidity }} <span class="unit">%</span></h2>
+      </div>
+    </div>
+
+    <!-- Soil Humidity Card -->
+    <div class="sensor-card soil-card">
+      <div class="card-icon">🌱</div>
+      <div class="card-content">
+        <p class="card-label">Humidité du sol</p>
+        <h2 class="card-value">{{ sensorData.soilHumidity }} <span class="unit">%</span></h2>
+        <p class="status-badge" [class.optimal]="isOptimal()">
+          ✓ {{ getSoilStatus() }}
+        </p>
+      </div>
+    </div>
+
+    <!-- Rain Card -->
+    <div class="sensor-card rain-card">
+      <div class="card-icon">☁️</div>
+      <div class="card-content">
+        <p class="card-label">Pluie</p>
+        <h2 class="card-value">{{ sensorData.rain ? 'Oui' : 'Non' }}</h2>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bouton IA/Manuel -->
+  <div class="ai-mode-section">
+    <div class="ai-mode-card">
+      <div class="ai-mode-header">
+        <div class="ai-icon">{{ isAIMode ? '🤖' : '👤' }}</div>
+        <div class="ai-text">
+          <h3>Mode de contrôle</h3>
+          <p>{{ isAIMode ? 'Intelligence Artificielle' : 'Contrôle Manuel' }}</p>
+        </div>
+      </div>
+      
+      <div class="ai-toggle-container">
+        <span class="toggle-label" [class.active]="!isAIMode">Manuel</span>
+        <label class="toggle-switch">
+          <input 
+            type="checkbox" 
+            [checked]="isAIMode"
+            (change)="toggleAIMode()"
+          />
+          <span class="toggle-slider"></span>
+        </label>
+        <span class="toggle-label" [class.active]="isAIMode">IA</span>
+      </div>
+
+      <div class="ai-status">
+        <div *ngIf="isAIMode" class="status-info ai-active">
+          <span class="status-icon">✓</span>
+          <div>
+            <p class="status-title">Mode IA activé</p>
+            <p class="status-desc">Les dispositifs sont contrôlés automatiquement selon les capteurs</p>
+          </div>
+        </div>
+        
+        <div *ngIf="!isAIMode" class="status-info manual-active">
+          <span class="status-icon">✓</span>
+          <div>
+            <p class="status-title">Mode Manuel activé</p>
+            <p class="status-desc">Vous contrôlez les dispositifs manuellement</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <!-- Water Level -->
+    <div class="water-level-card" [class.critical]="waterLevel.percentage <= 20">
+      <div class="card-header-section">
+        <div class="icon-wrapper">
+          <span class="icon">💧</span>
+        </div>
+        <div>
+          <h3 class="card-title">Niveau d'eau</h3>
+          <p class="card-subtitle">{{ waterLevel.label }}</p>
+        </div>
+        <h2 class="percentage">{{ waterLevel.percentage }}%</h2>
+      </div>
+      
+      <div class="water-tank">
+        <div class="tank-label top">100%</div>
+        <div class="tank-container">
+          <div class="water-fill" [style.height.%]="waterLevel.percentage"></div>
+          <div class="water-percentage" [class.critical]="waterLevel.percentage <= 20">
+            {{ waterLevel.percentage }}%
+          </div>
+        </div>
+        <div class="tank-label bottom">0%</div>
+      </div>
+    </div>
+
+    <!-- Control Devices -->
+    <div class="control-section">
+      <div class="control-card" *ngFor="let device of devices" [class.disabled]="isAIMode">
+        <div class="control-header">
+          <div class="icon-wrapper">
+            <span class="device-icon">{{ device.icon }}</span>
+          </div>
+          <div class="control-info">
+            <h3 class="control-title">{{ device.name }}</h3>
+            <p class="control-description">{{ device.description }}</p>
+            <p *ngIf="isAIMode" class="ai-controlled">🤖 Contrôlé par l'IA</p>
+          </div>
+        </div>
+        <div class="control-actions">
+          <span class="status-label" [class]="device.status">
+            {{ getStatusText(device.status) }}
+          </span>
+          <button 
+            class="control-btn" 
+            [class.active]="device.status === 'active'"
+            [disabled]="isAIMode"
+            (click)="toggleDevice(device.id)">
+            {{ getButtonText(device.status) }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Action Buttons -->
+<div class="action-buttons">
+  <button class="action-btn" (click)="showHistory()">
+    <span class="btn-icon">📊</span>
+    Voir l'historique
+  </button>
+  <button class="action-btn" (click)="showWeather()">
+    <span class="btn-icon">🌤️</span>
+    Prévisions météo
+  </button>
+  <button class="action-btn test-btn" (click)="testWaterUsage()">
+    <span class="btn-icon">🧪</span>
+    Tester alerte eau
+  </button>
+</div>

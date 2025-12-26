@@ -1,0 +1,82 @@
+<div class="profile-page">
+  <div class="profile-container">
+    <!-- Carte Modifier le nom -->
+    <div class="profile-card">
+      <div class="card-header">
+        <span class="icon">👤</span>
+        <h2>Modifier le nom</h2>
+      </div>
+      
+      <form class="profile-form" #nameForm="ngForm" (ngSubmit)="updateName(nameForm)">
+        <div class="form-group">
+          <label for="fullname">Nom complet</label>
+          <input
+            id="fullname"
+            name="fullname"
+            type="text"
+            [(ngModel)]="fullName"
+            required
+            class="input-field"
+            placeholder="Entrez votre nom complet"
+          />
+        </div>
+        
+        <button type="submit" class="btn-save" [disabled]="nameForm.invalid">
+          <span class="btn-icon">💾</span>
+          Enregistrer le nom
+        </button>
+      </form>
+    </div>
+
+    <!-- Carte Modifier le mot de passe -->
+    <div class="profile-card">
+      <div class="card-header">
+        <span class="icon">🔒</span>
+        <h2>Modifier le mot de passe</h2>
+      </div>
+      
+      <form class="profile-form" #passwordForm="ngForm" (ngSubmit)="updatePassword(passwordForm)">
+        <div class="form-group">
+          <label for="newPassword">Nouveau mot de passe</label>
+          <input
+            id="newPassword"
+            name="newPassword"
+            [type]="showNewPassword ? 'text' : 'password'"
+            ngModel
+            required
+            minlength="6"
+            class="input-field"
+            placeholder="••••••••"
+          />
+        </div>
+        
+        <div class="form-group">
+          <label for="confirmPassword">Confirmer le mot de passe</label>
+          <input
+            id="confirmPassword"
+            name="confirmPassword"
+            [type]="showConfirmPassword ? 'text' : 'password'"
+            ngModel
+            required
+            minlength="6"
+            class="input-field"
+            placeholder="••••••••"
+          />
+        </div>
+        
+        <p class="password-hint">Le mot de passe doit contenir au moins 6 caractères</p>
+        
+        <button type="submit" class="btn-update" [disabled]="passwordForm.invalid">
+          <span class="btn-icon">✓</span>
+          Mettre à jour le mot de passe
+        </button>
+      </form>
+    </div>
+
+    <!-- Bouton retour -->
+    <button class="btn-back" (click)="goBack()">
+      <span class="btn-icon">←</span>
+      Retour au dashboard
+    </button>
+  </div>
+</div>

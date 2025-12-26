@@ -1,0 +1,143 @@
+<div class="profile-page">
+  <div class="profile-container">
+    
+    <!-- Messages de succès/erreur -->
+    <div *ngIf="successMessage" class="alert alert-success">
+      {{ successMessage }}
+    </div>
+    
+    <div *ngIf="errorMessage" class="alert alert-error">
+      {{ errorMessage }}
+    </div>
+
+    <!-- Carte Modifier l'email
+    <div class="profile-card">
+      <div class="card-header">
+        <span class="icon">📧</span>
+        <h2>Modifier l'email</h2>
+      </div>
+      
+      <p class="current-info">Email actuel : <strong>{{ currentEmail }}</strong></p>
+      
+      <form class="profile-form" #emailForm="ngForm" (ngSubmit)="updateEmailAddress(emailForm)">
+        <div class="form-group">
+          <label for="newEmail">Nouvel email</label>
+          <input
+            id="newEmail"
+            name="newEmail"
+            type="email"
+            [(ngModel)]="newEmail"
+            required
+            email
+            class="input-field"
+            placeholder="nouveau@email.com"
+            [disabled]="isLoadingEmail"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="currentPassword">Mot de passe actuel</label>
+          <input
+            id="currentPassword"
+            name="currentPassword"
+            type="password"
+            [(ngModel)]="currentPasswordForEmail"
+            required
+            class="input-field"
+            placeholder="••••••••"
+            [disabled]="isLoadingEmail"
+          />
+          <p class="password-hint">
+            🔒 Pour votre sécurité, confirmez votre mot de passe
+          </p>
+        </div>
+        
+        <button 
+          type="submit" 
+          class="btn-save" 
+          [disabled]="emailForm.invalid || isLoadingEmail"
+        >
+          <span class="btn-icon">{{ isLoadingEmail ? '⏳' : '💾' }}</span>
+          {{ isLoadingEmail ? 'Enregistrement...' : 'Enregistrer le nouvel email' }}
+        </button>
+      </form>
+    </div> -->
+
+    <!-- Carte Modifier le mot de passe -->
+    <div class="profile-card">
+      <div class="card-header">
+        <span class="icon">🔒</span>
+        <h2>Modifier le mot de passe</h2>
+      </div>
+      
+      <form class="profile-form" #passwordForm="ngForm" (ngSubmit)="updatePassword(passwordForm)">
+        <div class="form-group">
+          <label for="newPassword">Nouveau mot de passe</label>
+          <div class="password-wrapper">
+            <input
+              id="newPassword"
+              name="newPassword"
+              [type]="showNewPassword ? 'text' : 'password'"
+              ngModel
+              required
+              minlength="6"
+              class="input-field"
+              placeholder="••••••••"
+              [disabled]="isLoadingPassword"
+            />
+            <button 
+              type="button" 
+              class="toggle-password"
+              (click)="showNewPassword = !showNewPassword"
+            >
+              {{ showNewPassword ? '👁️' : '👁️‍🗨️' }}
+            </button>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="confirmPassword">Confirmer le mot de passe</label>
+          <div class="password-wrapper">
+            <input
+              id="confirmPassword"
+              name="confirmPassword"
+              [type]="showConfirmPassword ? 'text' : 'password'"
+              ngModel
+              required
+              minlength="6"
+              class="input-field"
+              placeholder="••••••••"
+              [disabled]="isLoadingPassword"
+            />
+            <button 
+              type="button" 
+              class="toggle-password"
+              (click)="showConfirmPassword = !showConfirmPassword"
+            >
+              {{ showConfirmPassword ? '👁️' : '👁️‍🗨️' }}
+            </button>
+          </div>
+        </div>
+        
+        <p class="password-hint">
+          🔐 Le mot de passe doit contenir au moins 6 caractères
+        </p>
+        
+        <button 
+          type="submit" 
+          class="btn-update" 
+          [disabled]="passwordForm.invalid || isLoadingPassword"
+        >
+          <span class="btn-icon">{{ isLoadingPassword ? '⏳' : '✓' }}</span>
+          {{ isLoadingPassword ? 'Mise à jour...' : 'Mettre à jour le mot de passe' }}
+        </button>
+      </form>
+    </div>
+
+    <!-- Bouton retour -->
+    <button class="btn-back" (click)="goBack()">
+      <span class="btn-icon">←</span>
+      Retour au dashboard
+    </button>
+  </div>
+</div>

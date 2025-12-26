@@ -1,0 +1,66 @@
+<div class="login-page">
+  <main class="login-card">
+    <header class="card-header">
+      <!-- Logo et nom -->
+      <div class="brand-container">
+        <div class="logo">🌱</div>
+        <h2 class="brand-name">Eco Garden</h2>
+      </div>
+      
+      <h1 id="login-title">Sign in</h1>
+      <p class="subtitle">Enter your credentials to access your garden</p>
+    </header>
+
+    <!-- FORMULAIRE -->
+    <form
+      class="login-form"
+      
+      #loginForm="ngForm" 
+      (ngSubmit)="onSubmit(loginForm)"
+      novalidate
+    >
+      <!-- USERNAME -->
+      <label for="username" class="field-label">Username</label>
+      <input
+        id="username"
+        name="username"
+        type="text"
+        ngModel
+        required
+        minlength="3"
+        placeholder="Enter your username"
+        class="input-field"
+      />
+
+      <!-- PASSWORD -->
+      <label for="password" class="field-label">Password</label>
+      <input
+        id="password"
+        name="password"
+        [type]="showPassword ? 'text' : 'password'"
+        ngModel
+        required
+        minlength="6"
+        placeholder="••••••••"
+        class="input-field"
+      />
+
+      <!-- SHOW PASSWORD -->
+      <div class="password-row">
+        <label class="checkbox">
+          <input type="checkbox" (change)="showPassword = !showPassword" />
+          <span>Show password</span>
+        </label>
+      </div>
+
+      <!-- SUBMIT -->
+      <button
+        type="submit"
+        class="btn-primary"
+        [disabled]="loginForm.invalid"
+      >
+        Sign in
+      </button>
+    </form>
+  </main>
+</div>
